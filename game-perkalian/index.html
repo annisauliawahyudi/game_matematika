@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kuis Pengurangan Isian</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            gap: 10px;
+            margin: 0;
+            background-color: #f1f7db;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #f7f9fc;
+        }
+        
+        .question-box {
+            width: 500px;
+            height: 250px;
+            border: 1px solid #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+            background-color: #b7daf9;
+            border-radius: 8px;
+        }
+
+        #question-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .inputs-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .inputs-container input {
+            width: 80px;
+            height: 40px;
+            font-size: 16px;
+            text-align: center;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        
+        .inputs-container input#input3 {
+            background-color: #e8f5e9;
+            font-weight: bold;
+        }
+
+        .inputs-container span {
+            font-size: 24px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            transition: background-color 0.2s ease;
+        }
+
+        #check-button {
+            background-color: #28a745;
+        }
+        #check-button:hover {
+            background-color: #218838;
+        }
+
+        #reset-button {
+            background-color: #dc3545;
+        }
+        #reset-button:hover {
+            background-color: #c82333;
+        }
+
+        #feedback-message {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            min-height: 24px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ayo Berhitung Pengurangan</h1>
+    <h3>Hitung gambar kemudian kurangi dengan gambar yang di coret,<br>lalu isi kotak jawaban dengan benar.</h3>
+
+    <div class="main-container">
+        <div class="question-box">
+            <img id="question-image" src="mod/soal01.png" alt="Soal Gambar">
+        </div>
+        
+        <div class="inputs-container">
+            <input type="number" id="input1" placeholder="angka">
+            <span>-</span>
+            <input type="number" id="input2" placeholder="angka">
+            <span>=</span>
+            <input type="number" id="input3" placeholder="jawaban">
+        </div>
+    </div>
+    
+    <div class="button-container">
+        <button id="check-button">Periksa Jawaban</button>
+        <button id="reset-button">Ulang Jawaban</button>
+    </div>
+    <div id="feedback-message"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputs = {
+                1: document.getElementById('input1'),
+                2: document.getElementById('input2'),
+                3: document.getElementById('input3')
+            };
+            const questionImage = document.getElementById('question-image');
+            const checkButton = document.getElementById('check-button');
+            const resetButton = document.getElementById('reset-button');
+            const feedbackMessage = document.getElementById('feedback-message');
+
+            const questions = [
+                { image: 'mod/soal01.png', num1: 10, num2: 5 },
+                { image: 'mod/soal02.png', num1: 9, num2: 3 },
+                { image: 'mod/soal03.png', num1: 8, num2: 4 },
+                { image: 'mod/soal04.png', num1: 7, num2: 2 },
+                { image: 'mod/soal05.png', num1: 6, num2: 1 },
+                { image: 'mod/soal06.png', num1: 6, num2: 1 },
+                { image: 'mod/soal07.png', num1: 6, num2: 1 },
+                { image: 'mod/soal08.png', num1: 6, num2: 1 },
+                { image: 'mod/soal09.png', num1: 6, num2: 1 },
+                { image: 'mod/soal10.png', num1: 6, num2: 1 }
+            ];
+
+            // Fungsi untuk mengubah teks menjadi suara
+            function speak(text) {
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'id-ID';
+                    window.speechSynthesis.speak(utterance);
+                } else {
+                    console.warn("Web Speech API (SpeechSynthesis) tidak didukung di browser ini.");
+                }
+            }
+
+            function startNewQuestion() {
+                const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+                questionImage.src = randomQuestion.image;
+                
+                inputs[1].value = '';
+                inputs[2].value = '';
+                inputs[3].value = '';
+                feedbackMessage.textContent = '';
+                inputs[1].focus();
+                
+                // Tambahkan suara saat soal baru muncul
+                speak("Ayo berhitung. Masukkan angka yang tepat!");
+            }
+
+            function resetGame() {
+                inputs[1].value = '';
+                inputs[2].value = '';
+                inputs[3].value = '';
+                feedbackMessage.textContent = '';
+                inputs[1].focus();
+                
+                // Tambahkan suara saat tombol ulang diklik
+                speak("Jawaban diulang, silakan coba lagi.");
+            }
+
+            checkButton.addEventListener('click', () => {
+                const num1 = parseInt(inputs[1].value);
+                const num2 = parseInt(inputs[2].value);
+                const userAnswer = parseInt(inputs[3].value);
+                
+                if (isNaN(num1) || isNaN(num2) || isNaN(userAnswer)) {
+                    feedbackMessage.textContent = 'Harap isi semua kotak jawaban!';
+                    feedbackMessage.style.color = 'red';
+                    speak('Harap isi semua kotak jawaban!');
+                    return;
+                }
+
+                const correctAnswer = num1 - num2;
+                
+                if (userAnswer === correctAnswer) {
+                    feedbackMessage.textContent = 'Jawaban Benar! 🎉 Memuat soal berikutnya...';
+                    feedbackMessage.style.color = 'green';
+                    speak('Jawaban kamu benar!');
+                    setTimeout(() => {
+                        startNewQuestion();
+                    }, 2000);
+                } else {
+                    feedbackMessage.textContent = 'Jawaban Salah, coba lagi. 😔';
+                    feedbackMessage.style.color = 'red';
+                    speak(`Jawaban kamu salah. ${num1} dikurangi ${num2} adalah ${correctAnswer}.`);
+                }
+            });
+            
+            resetButton.addEventListener('click', () => {
+                resetGame();
+            });
+
+            startNewQuestion();
+        });
+    </script>
+</body>
+</html>

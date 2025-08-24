@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Drag & Drop Biskuit</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            width: 100%;
+        }
+
+        #drag-items {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            border: 3px dashed #b3e0ff;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 900px;
+        }
+
+        .drag-item {
+            cursor: grab;
+            transition: transform 0.2s ease-in-out;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            width: 15%;
+            min-width: 100px;
+            height: auto;
+        }
+
+        .drag-item:hover {
+            transform: scale(1.1);
+            border-color: #3498db;
+        }
+
+        #drop-targets {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            width: 80%;
+            max-width: 900px;
+        }
+
+        .drop-target {
+            width: 250px;
+            min-height: 250px;
+            background-color: #ecf0f1;
+            border: 3px solid #bdc3c7;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            gap: 10px;
+        }
+
+        .drop-target h2 {
+            color: #555;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        
+        .drop-target img {
+            width: 80px;
+            height: auto;
+        }
+
+        .drag-over {
+            background-color: #d4edda !important;
+            border-color: #28a745 !important;
+            transform: scale(1.05);
+        }
+
+        #reset-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            background-color: #3498db;
+            color: white;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+        #reset-button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Kelompokkan Biskuit Sesuai Bentuknya</h1>
+
+    <div class="container">
+        <div id="drag-items">
+            <img src="mod/BiskuitSegitiga01.png" draggable="true" data-bentuk="segitiga" class="drag-item" alt="Biskuit Segitiga">
+            <img src="mod/BiskuitKotak01.png" draggable="true" data-bentuk="persegi" class="drag-item" alt="Biskuit Persegi">
+            <img src="mod/BiskuitLengkung01.png" draggable="true" data-bentuk="lengkung" class="drag-item" alt="Biskuit Lengkung">
+            <img src="mod/BiskuitSegitiga02.png" draggable="true" data-bentuk="segitiga" class="drag-item" alt="Biskuit Segitiga">
+            <img src="mod/BiskuitKotak02.png" draggable="true" data-bentuk="persegi" class="drag-item" alt="Biskuit Persegi">
+            <img src="mod/BiskuitLengkung03.png" draggable="true" data-bentuk="lengkung" class="drag-item" alt="Biskuit Lengkung">
+            <img src="mod/BiskuitSegitiga03.png" draggable="true" data-bentuk="segitiga" class="drag-item" alt="Biskuit Segitiga">  
+            <img src="mod/BiskuitKotak03.png" draggable="true" data-bentuk="persegi" class="drag-item" alt="Biskuit Persegi">  
+            <img src="mod/BiskuitLengkung02.png" draggable="true" data-bentuk="lengkung" class="drag-item" alt="Biskuit Lengkung">        
+        </div>
+
+        <div id="drop-targets">
+            <div class="drop-target" data-bentuk="segitiga">
+                <h2>Segitiga</h2>
+            </div>
+            <div class="drop-target" data-bentuk="persegi">
+                <h2>Persegi</h2>
+            </div>
+            <div class="drop-target" data-bentuk="lengkung">
+                <h2>Lengkung</h2>
+            </div>
+        </div>
+    </div>
+    
+    <button id="reset-button">Ulang Permainan</button>
+
+    <script>
+        const dragItems = document.querySelectorAll('.drag-item');
+        const dropTargets = document.querySelectorAll('.drop-target');
+        const dragContainer = document.getElementById('drag-items');
+        const resetButton = document.getElementById('reset-button');
+
+        let draggedItem = null;
+
+        dragItems.forEach(item => {
+            item.addEventListener('dragstart', (e) => {
+                draggedItem = item;
+                setTimeout(() => {
+                    item.style.opacity = '0.5';
+                }, 0);
+            });
+
+            item.addEventListener('dragend', () => {
+                if (draggedItem) {
+                    draggedItem.style.opacity = '1';
+                    draggedItem = null;
+                }
+            });
+        });
+
+        dropTargets.forEach(target => {
+            target.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                target.classList.add('drag-over');
+            });
+
+            target.addEventListener('dragleave', () => {
+                target.classList.remove('drag-over');
+            });
+
+            target.addEventListener('drop', (e) => {
+                e.preventDefault();
+                target.classList.remove('drag-over');
+
+                if (draggedItem) {
+                    const itemBentuk = draggedItem.getAttribute('data-bentuk');
+                    const targetBentuk = target.getAttribute('data-bentuk');
+
+                    if (itemBentuk === targetBentuk) {
+                        target.appendChild(draggedItem);
+                        draggedItem.removeAttribute('draggable');
+                        draggedItem.style.opacity = '1';
+                        draggedItem = null;
+                    } else {
+                        draggedItem.style.opacity = '1';
+                    }
+                }
+            });
+        });
+
+        // Fungsi untuk mereset game
+        function resetGame() {
+            // Pindahkan semua gambar dari kotak target kembali ke kontainer awal
+            dropTargets.forEach(target => {
+                const movedItems = target.querySelectorAll('img');
+                movedItems.forEach(item => {
+                    dragContainer.appendChild(item);
+                    item.setAttribute('draggable', 'true');
+                    item.style.opacity = '1';
+                });
+            });
+        }
+
+        // Tambahkan event listener untuk tombol reset
+        resetButton.addEventListener('click', resetGame);
+    </script>
+</body>
+</html>

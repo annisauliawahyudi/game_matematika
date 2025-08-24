@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Pengenalan Angka dengan Kata</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+            text-align: center;
+        }
+        .container {
+            background: #fff;
+            padding: 20px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 24px;
+            color: #f31717;
+        }
+        #word-display {
+            font-size: 4em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .images-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .images-container img {
+            width: 80px;
+            height: 80px;
+        }
+        .buttons-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .buttons-container button {
+            padding: 15px;
+            font-size: 1.5em;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #e48d12;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        .buttons-container button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Pilih jumlah gambar yang sesuai dengan kata di bawah ini</h1>
+        <div id="word-display"></div>
+        <div id="images-container" class="images-container"></div>
+        <div id="buttons-container" class="buttons-container"></div>
+        <p id="result"></p>
+        <button onclick="startGame()">Ulang</button>
+    </div>
+
+    <script>
+        const wordDisplay = document.getElementById('word-display');
+        const imagesContainer = document.getElementById('images-container');
+        const buttonsContainer = document.getElementById('buttons-container');
+        const resultText = document.getElementById('result');
+
+        let correctNumber;
+
+        const fruitImages = [
+            'mod/apel.png',
+            'mod/jeruk.png',
+            'mod/nanas.png',
+            'mod/pisang.png',
+            'mod/semangka.png'
+        ];
+
+        const numberWords = [
+            "SATU", "DUA", "TIGA", "EMPAT", "LIMA", "ENAM", "TUJUH", "DELAPAN", "SEMBILAN", "SEPULUH"
+        ];
+
+        function startGame() {
+            correctNumber = Math.floor(Math.random() * 10) + 1;
+            displayWord(correctNumber);
+            createButtons();
+            resultText.textContent = '';
+        }
+
+        function displayWord(number) {
+            wordDisplay.textContent = numberWords[number - 1];
+        }
+
+        function createButtons() {
+            buttonsContainer.innerHTML = '';
+            // Menciptakan array angka acak untuk tombol, termasuk jawaban yang benar
+            let numbers = [correctNumber];
+            while(numbers.length < 10) {
+                let randomNum = Math.floor(Math.random() * 10) + 1;
+                if (!numbers.includes(randomNum)) {
+                    numbers.push(randomNum);
+                }
+            }
+            numbers.sort(() => Math.random() - 0.5); // Mengacak urutan tombol
+
+            for (let i = 0; i < numbers.length; i++) {
+                const button = document.createElement('button');
+                button.textContent = numbers[i];
+                button.onclick = () => checkAnswer(numbers[i]);
+                buttonsContainer.appendChild(button);
+            }
+        }
+
+        function checkAnswer(selectedNumber) {
+            if (selectedNumber === correctNumber) {
+                resultText.textContent = 'Jawaban kamu benar! 🎉';
+                resultText.style.color = 'green';
+                setTimeout(startGame, 1500); 
+            } else {
+                resultText.textContent = 'Jawaban kamu salah. Coba lagi! 🤔';
+                resultText.style.color = 'red';
+            }
+        }
+
+        window.onload = startGame;
+    </script>
+
+</body>
+</html>

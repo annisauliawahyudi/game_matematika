@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Edukasi Matematika</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f9e7c9;
+            color: #333;
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .header .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+        .header .nav-buttons button {
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .header .nav-buttons button:hover {
+            background-color: white;
+            color: #007bff;
+        }
+        .main-content {
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .title {
+            font-size: 2rem;
+            color: #1a237e;
+            margin-bottom: 40px;
+        }
+        .class-list, .topic-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        @media (max-width: 768px) {
+            .class-list, .topic-list {
+                grid-template-columns: 1fr;
+            }
+        }
+        .class-card, .topic-card {
+            background-color: rgb(228, 247, 202);
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .topic-card {
+            width: 180px;
+            padding: 20px;
+        }
+        .class-card:hover, .topic-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+        }
+        .class-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .class-name, .topic-title {
+            font-size: 1.3rem;
+            margin: 15px 0;
+            color: #3949ab;
+        }
+        .topic-icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .game-iframe {
+            width: 100%;
+            height: 400px;
+            border: none;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        .no-underline {
+            text-decoration: none;
+        }
+        .subtopik-list {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+        .subtopik-list li {
+            margin-bottom: 10px;
+        }
+        .subtopik-link {
+            font-size: .9rem;
+            color: #975916;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .subtopik-link:hover {
+            color: #f91313;
+            text-decoration: underline;
+        }
+        .topic-description {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+        .class-description {
+            font-size: 0.9rem;
+            color: #fa0b0b;
+            margin-top: -10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="aplikasi-vue">
+        <header class="header">
+            <router-link to="/" class="logo">Matematika Asyik</router-link>
+            <div class="nav-buttons">
+                <router-link to="/masuk"><button>Masuk</button></router-link>
+                <router-link to="/daftar"><button>Daftar</button></router-link>
+            </div>
+        </header>
+        <router-view></router-view>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vue-router@4"></script>
+<script>
+    const { createApp } = Vue;
+    const { createRouter, createWebHashHistory } = VueRouter;
+
+const globalData = {
+    kelasList: [
+        { 
+            id: 1, 
+            nama: 'Kelas 1', 
+            gambar: 'dukungan/gambar/kelas+1.png',
+            deskripsi: '25 Kompetensi Belajar',
+            topik: [
+                { 
+                    id: 11, 
+                    judul: 'Mengenal Angka', 
+                    icon: '🔢', 
+                    deskripsi: 'Mengenal berbagai macam angka dan membacanya.',
+                    games: [
+                        { id: 131, nama: 'Angka 1-10', src: 'game-angka-1-10/index.html' },
+                        { id: 132, nama: 'Angka 11-20', src: 'game-angka-11-20/index.html' },
+                        { id: 133, nama: 'Angka dalam Kata', src: 'game-angka-kata/index.html' }
+                    ]
+                },
+                { 
+                    id: 12, 
+                    judul: 'Penjumlahan', 
+                    icon: '➕',
+                    deskripsi: 'Ayo belajar menjumlahkan angka dengan mudah!',
+                    games: [
+                        { id: 111, nama: 'Penjumlahan 0-5', src: 'game-penjumlahan-0-5/index.html' },
+                        { id: 112, nama: 'Penjumlahan 0-10', src: 'game-penjumlahan-0-10/index.html' },
+                        { id: 113, nama: 'Penjumlahan 0-20', src: 'game-penjumlahan-0-20/index.html' }
+                    ]
+                },
+                { 
+                    id: 13, 
+                    judul: 'Pengurangan', 
+                    icon: '➖', 
+                    deskripsi: 'Menantang diri dengan soal pengurangan yang seru.',
+                    games: [
+                        { id: 121, nama: 'Pengurangan 0-5', src: 'game-pengurangan-0-5/index.html' },
+                        { id: 122, nama: 'Pengurangan 0-10', src: 'game-pengurangan-0-10/index.html' },
+                        { id: 123, nama: 'Pengurangan 0-20', src: 'game-pengurangan-0-20/index.html' }
+                    ]
+                },
+            ]
+        },
+        { 
+            id: 2, 
+            nama: 'Kelas 2', 
+            gambar: 'dukungan/gambar/kelas+2.png',
+            deskripsi: '30 Kompetensi Belajar',
+            topik: [
+                { id: 21, judul: 'Perkalian', icon: '✖️', deskripsi: 'Pecahkan teka-teki perkalian dan jadilah detektif matematika.', games: [
+                    { id: 211, nama: 'Perkalian 1-5', src: 'game-perkalian-1-5/index.html' },
+                    { id: 212, nama: 'Perkalian 6-10', src: 'game-perkalian-6-10/index.html' }
+                ]},
+                { id: 22, judul: 'Pembagian', icon: '➗', deskripsi: 'Cari tahu cara membagi angka dengan game asah otak ini.', games: [
+                    { id: 221, nama: 'Pembagian Dasar', src: 'game-pembagian-dasar/index.html' },
+                    { id: 222, nama: 'Pembagian Lanjutan', src: 'game-pembagian-lanjutan/index.html' }
+                ]}
+            ]
+        },
+        { 
+            id: 3, 
+            nama: 'Kelas 3', 
+            gambar: 'dukungan/gambar/kelas+3.png',
+            deskripsi: '20 Kompetensi Belajar',
+            topik: [
+                { id: 31, judul: 'Operasi Campuran', icon: '➗✖️', deskripsi: 'Gabungan penjumlahan, pengurangan, perkalian, dan pembagian.' , games: [
+                    { id: 311, nama: 'Teka-Teki Angka', src: 'game-operasi-campuran-1/index.html' },
+                    { id: 312, nama: 'Misi Kuis Operasi', src: 'game-operasi-campuran-2/index.html' }
+                ]},
+                { id: 32, judul: 'Pecahan Sederhana', icon: '1/2', deskripsi: 'Belajar memahami konsep pecahan dasar.', games: [
+                    { id: 321, nama: 'Menghitung Pecahan', src: 'game-pecahan-1/index.html' },
+                    { id: 322, nama: 'Kuis Pecahan', src: 'game-pecahan-2/index.html' }
+                ]}
+            ]
+        },
+        { 
+            id: 4, 
+            nama: 'Kelas 4', 
+            gambar: 'dukungan/gambar/kelas+4.png',
+            deskripsi: '25 Kompetensi Belajar',
+            topik: [
+                { id: 41, judul: 'Bangun Datar', icon: '📐', deskripsi: 'Mengenal berbagai macam bentuk bangun datar.' , games: [
+                    { id: 411, nama: 'Teka-Teki Bangun Datar', src: 'game-bangun-datar/index.html' }
+                ]},
+                { id: 42, judul: 'Keliling & Luas', icon: '📏', deskripsi: 'Menghitung keliling dan luas dari bangun datar.', games: [
+                    { id: 421, nama: 'Latihan Keliling', src: 'game-keliling/index.html' },
+                    { id: 422, nama: 'Latihan Luas', src: 'game-luas/index.html' }
+                ]}
+            ]
+        },
+        { 
+            id: 5, 
+            nama: 'Kelas 5', 
+            gambar: 'dukungan/gambar/kelas+5.png',
+            deskripsi: '20 Kompetensi Belajar',
+            topik: [
+                { id: 51, judul: 'Volume Bangun Ruang', icon: '📦', deskripsi: 'Menghitung volume berbagai bangun ruang.', games: [
+                    { id: 511, nama: 'Kuis Volume Balok', src: 'game-volume-balok/index.html' },
+                    { id: 512, nama: 'Kuis Volume Kubus', src: 'game-volume-kubus/index.html' }
+                ]},
+                { id: 52, judul: 'Satuan Waktu', icon: '⏰', deskripsi: 'Belajar mengkonversi satuan waktu.', games: [
+                    { id: 521, nama: 'Konversi Waktu', src: 'game-konversi-waktu/index.html' }
+                ]}
+            ]
+        },
+        { 
+            id: 6, 
+            nama: 'Kelas 6', 
+            gambar: 'dukungan/gambar/kelas+6.png',
+            deskripsi: '25 Kompetensi Belajar',
+            topik: [
+                { id: 61, judul: 'Pencerminan', icon: '🖼️', deskripsi: 'Memahami konsep pencerminan bangun datar.', games: [
+                    { id: 611, nama: 'Pencerminan Asyik', src: 'game-pencerminan/index.html' }
+                ]},
+                { id: 62, judul: 'Statistika', icon: '📈', deskripsi: 'Membaca dan menganalisis data statistik.', games: [
+                    { id: 621, nama: 'Statistika Sederhana', src: 'game-statistika/index.html' }
+                ]}
+            ]
+        }
+    ]
+};
+
+    const Home = {
+        data() {
+            return {
+                judulUtama: 'Pilih Kelasmu dan Mulai Belajar!',
+                kelasList: globalData.kelasList,
+            };
+        },
+        template: `
+            <main class="main-content">
+                <h2 class="title">{{ judulUtama }}</h2>
+                <div class="class-list">
+                    <div v-for="kelas in kelasList" :key="kelas.id" class="class-card">
+                        <router-link :to="'/kelas/' + kelas.id" class="no-underline">
+                            <img :src="kelas.gambar" :alt="kelas.nama" class="class-image">
+                            <h3 class="class-name">{{ kelas.nama }}</h3>
+                            <p class="class-description">{{ kelas.deskripsi }}</p>
+                        </router-link>
+                    </div>
+                </div>
+            </main>
+        `
+    };
+
+    const KelasPage = {
+        props: ['id'],
+        computed: {
+            kelas() {
+                return globalData.kelasList.find(k => k.id == this.id);
+            }
+        },
+        template: `
+            <div class="main-content">
+                <router-link to="/" class="no-underline">
+                    <button style="margin-bottom: 20px;">Kembali ke Beranda</button>
+                </router-link>
+                <h2 class="title">{{ kelas.nama }}</h2>
+                <div class="topic-list">
+                    <div v-for="topik in kelas.topik" :key="topik.id" class="topic-card">
+                        <h3 class="topic-title">{{ topik.judul }}</h3>
+                        <p class="topic-description">{{ topik.deskripsi }}</p>
+                        <ul class="subtopik-list">
+                            <li v-for="game in topik.games" :key="game.id">
+                                <a :href="game.src" target="_blank" class="subtopik-link">{{ game.nama }}</a>
+                            </li>
+                        </ul>
+                        <router-link v-if="!topik.games.length" :to="'/game/' + topik.id" class="no-underline">
+                            <span class="topic-icon">{{ topik.icon }}</span>
+                        </router-link>
+                    </div>
+                </div>
+            </div>
+        `
+    };
+
+    const GamePage = {
+        props: ['id'],
+        computed: {
+            data() {
+                let kelas = null;
+                for (let k of globalData.kelasList) {
+                    const topik = k.topik.find(t => t.id == this.id);
+                    if (topik) {
+                        kelas = k;
+                        return { kelas, topik };
+                    }
+                }
+                return { kelas: null, topik: null };
+            }
+        },
+        template: `
+            <div class="main-content">
+                <router-link :to="'/kelas/' + data.kelas.id" class="no-underline">
+                    <button style="margin-bottom: 20px;">Kembali ke Kelas</button>
+                </router-link>
+                <h2 class="title">{{ data.topik.judul }}</h2>
+                <div class="game-container">
+                    <iframe :src="data.topik.src" class="game-iframe"></iframe>
+                </div>
+            </div>
+        `
+    };
+
+    const NotFoundPage = {
+      template: `<div><h2>Halaman Tidak Ditemukan</h2><p>Halaman yang Anda cari tidak ada.</p></div>`
+    };
+    const LoginPage = { template: '<div class="main-content"><h2>Halaman Masuk</h2><p>Formulir login akan berada di sini.</p></div>' };
+    const RegisterPage = { template: '<div class="main-content"><h2>Halaman Daftar</h2><p>Formulir pendaftaran akan berada di sini.</p></div>' };
+
+    const routes = [
+        { path: '/', component: Home },
+        { path: '/kelas/:id', component: KelasPage, props: true },
+        { path: '/game/:id', component: GamePage, props: true },
+        { path: '/masuk', component: LoginPage },
+        { path: '/daftar', component: RegisterPage },
+        { path: '/:pathMatch(.*)*', component: NotFoundPage }
+    ];
+
+    const router = createRouter({
+        history: createWebHashHistory(),
+        routes
+    });
+
+    const app = createApp({});
+    app.use(router);
+    app.mount('#aplikasi-vue');
+</script>
+</body>
+</html>
